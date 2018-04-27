@@ -88,7 +88,9 @@ class LineToAView (ctx : Context) : View(ctx) {
         fun draw(canvas : Canvas, paint : Paint) {
             val w : Float = canvas.width.toFloat()
             val h : Float = canvas.height.toFloat()
-            val size : Float = Math.min(w, h)/10
+            val size : Float = Math.min(w, h)/3
+            paint.strokeWidth = Math.min(w, h)/50
+            paint.strokeCap = Paint.Cap.ROUND
             canvas.save()
             canvas.translate(w/2, h/2)
             canvas.drawLine(-size/2 * state.scales[0], 0f, size/2 * state.scales[0], 0f, paint)
