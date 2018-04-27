@@ -27,7 +27,7 @@ class LineToAView (ctx : Context) : View(ctx) {
 
     data class LTAState (var prevScale : Float = 0f, var dir : Float = 0f, var j : Int = 0) {
 
-        private val scales : Array<Float> = arrayOf(0f, 0f, 0f)
+        val scales : Array<Float> = arrayOf(0f, 0f, 0f)
 
         fun update(stopcb : (Float) -> Unit) {
             scales[j] += dir * 0.1f
@@ -43,7 +43,7 @@ class LineToAView (ctx : Context) : View(ctx) {
             }
         }
 
-        fun startUpdating(startcb : (Float) -> Unit) {
+        fun startUpdating(startcb : () -> Unit) {
             if (dir == 0f) {
                 dir = 1 - 2 * prevScale
                 startcb()
@@ -78,6 +78,33 @@ class LineToAView (ctx : Context) : View(ctx) {
                 animated = false
             }
         }
+    }
 
+    data class LineToAShape(var i : Int, var state : LTAState = LTAState()) {
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            val w : Float = canvas.width.toFloat()
+            val h : Float = canvas.height.toFloat()
+            val size : Float = Math.min(w, h)/10
+            canvas.save()
+            canvas.translate(w/2, h/2)
+            canvas.drawLine(-size/2 * state.scales[0], 0f, size/2 * state.scales[0], 0f, paint)
+            for (i in 0..1) {
+                canvas.save()
+                canvas.translate(0f, -size)
+                canvas.rotate(30f * (1 - 2 * i) * state.scales[2])
+                canvas.drawLine(0f, 0f, 0f, 2 * size * state.scales[1], paint)
+                canvas.restore()
+            }
+            canvas.restore()
+        }
+
+        fun update(stopcb : (Float) -> Unit) {
+            state.update(stopcb)
+        }
+
+        fun startUpdating(startcb : () -> Unit) {
+            state.startUpdating(startcb)
+        }
     }
 }
