@@ -4,6 +4,7 @@ package ui.anwesome.com.linetoaview
  * Created by anweshmishra on 27/04/18.
  */
 
+import android.app.Activity
 import android.content.*
 import android.view.*
 import android.graphics.*
@@ -131,6 +132,14 @@ class LineToAView (ctx : Context) : View(ctx) {
             lta.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+        fun create(activity : Activity) : LineToAView {
+            val view : LineToAView = LineToAView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
