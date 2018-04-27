@@ -107,4 +107,28 @@ class LineToAView (ctx : Context) : View(ctx) {
             state.startUpdating(startcb)
         }
     }
+
+    data class LTARenderer(var view : LineToAView) {
+
+        private val animator : LTAAnimator = LTAAnimator(view)
+
+        private val lta : LineToAShape = LineToAShape(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
+            paint.color = Color.parseColor("#2980b9")
+            lta.draw(canvas, paint)
+            animator.animate {
+                lta.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            lta.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
